@@ -1,20 +1,28 @@
 from pathlib import Path
-from typing import Union
 import pandas as pd
 import numpy as np
 
 def load_csv(path):
     return pd.read_csv(path)
 
-def load_recording(run_folder: Path):
+def load_recording(run_folder):
     acc = pd.read_csv(run_folder / "Accelerometer.csv")
     gyr = pd.read_csv(run_folder / "Gyroscope.csv")
     return acc, gyr
 
-def extract_features(acc: pd.DataFrame, gyr: pd.DataFrame) -> np.ndarray:
+def extract_features(acc, gyr):
     features = []
-    acc_cols = ["Acceleration x (m/s^2)", "Acceleration y (m/s^2)", "Acceleration z (m/s^2)"]
-    gyr_cols = ["Gyroscope x (rad/s)", "Gyroscope y (rad/s)", "Gyroscope z (rad/s)"]
+
+    # Automatisch richtige Spaltennamen erkennen
+    if "Acceleration x (m/s^2)" in acc.columns:
+        acc_cols = ["Acceleration x (m/s^2)", "Acceleration y (m/s^2)", "Acceleration z (m/s^2)"]
+    else:
+        acc_cols = ["X (m/s^2)", "Y (m/s^2)", "Z (m/s^2)"]
+
+    if "Gyroscope x (rad/s)" in gyr.columns:
+        gyr_cols = ["Gyroscope x (rad/s)", "Gyroscope y (rad/s)", "Gyroscope z (rad/s)"]
+    else:
+        gyr_cols = ["X (rad/s)", "Y (rad/s)", "Z (rad/s)"]
 
     for df, cols in [(acc, acc_cols), (gyr, gyr_cols)]:
         for col in cols:
@@ -28,7 +36,7 @@ def extract_features(acc: pd.DataFrame, gyr: pd.DataFrame) -> np.ndarray:
 
     return np.array(features)
 
-def load_all_data(data_folder: Path, digits: list):
+def load_all_data(data_folder, digits):
     X = []
     y = []
 
@@ -52,6 +60,6 @@ def load_all_data(data_folder: Path, digits: list):
 
 if __name__ == "__main__":
     data_folder = Path("/Users/isakilic/Downloads/real_data")
-    X, y = load_all_data(data_folder, digits=[3])
+    X, y = load_all_data(data_folder, digits=[0, 2, 3])
     print(f"\nFeature Matrix: {X.shape}")
     print(f"Labels: {y}")

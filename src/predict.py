@@ -58,6 +58,6 @@ if __name__ == "__main__":
     
     # Schritt 2: Neue Aufnahme vorhersagen
     # Ändere diesen Pfad zu deiner neuen Aufnahme!
-    test_folder = "/Users/isakilic/Downloads/real_data/digit_3_run01"
+    test_folder = "/Users/isakilic/Downloads/real_data/test_digit1"
     print(f"\nVorhersage für: {test_folder}")
     predict_digit(test_folder, model, le)
